@@ -1275,8 +1275,8 @@
         </div>
       </div>
       <div class="cc-stats">
-        <div class="mini-card"><small>Ingresos netos</small><strong id="homeIngresos">$0.00</strong><span
-            id="homeIngresosCount">0 ajustes aplicados</span></div>
+        <div class="mini-card"><small>Ingresos</small><strong id="homeIngresos">$0.00</strong><span
+            id="homeIngresosCount">Total reportado por el corte de caja</span></div>
         <div class="mini-card"><small>Gastos</small><strong id="homeGastos">$0.00</strong><span
             id="homeGastosCount">Compras, gastos, viajes y dueños</span></div>
         <div class="mini-card"><small>Balance</small><strong id="homeBalance">$0.00</strong><span
@@ -2996,8 +2996,13 @@
           document.getElementById("homeIngresos").textContent = fmt(data.ingresos || 0);
           document.getElementById("homeGastos").textContent = fmt(data.gastos || 0);
           document.getElementById("homeBalance").textContent = fmt(data.balance || 0);
+          // Nota: data.totalTarjeta / data.totalCancelaciones son solo
+          // referencia informativa (lo capturado en Corte de caja > Ajustes
+          // para ese rango). Ya NO se restan de "Ingresos": ese calculo
+          // vive exclusivamente en el modulo de Ajustes para saber el
+          // efectivo en caja, no en el balance general de Inicio.
           document.getElementById("homeIngresosCount").textContent =
-            fmt(data.totalTarjeta || 0) + " tarjeta y " + fmt(data.totalCancelaciones || 0) + " cancelaciones";
+            fmtFecha(data.desde || "") + " a " + fmtFecha(data.hasta || "");
           document.getElementById("homeGastosCount").textContent =
             fmt(data.totalCompras || 0) + " en compras + operacion";
           document.getElementById("homeBalanceCount").textContent =
@@ -3093,7 +3098,7 @@
           });
         });
         items.push({
-          title: "Ingresos netos",
+          title: "Ingresos",
           meta: fmtFecha(filtros.desde || "") + " a " + fmtFecha(filtros.hasta || ""),
           amount: fmt(operativo.ingresos || 0)
         });
